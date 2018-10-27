@@ -1,0 +1,150 @@
+There are two aspects of this project
+
+##1 The Front End
+##2 The Back End
+
+----- Front End -----
+-> The UI front of this project is very elegant.
+-> The color palette used for this project is:
+   Borders of labels : rgb(101,180,143)
+   Background of the back panel : rgb(2,22,30)
+   Background of sub panels : rgb(0,44,45)
+   Borders of sub panels : rgb(244,244,244)
+-> To display each jFrame at the center of the screen
+   '''
+   (inside the constructor of the JFrame object, just below the initComponents();)
+   this.setLocationRelativeTo(null);
+   '''
+
+----- Back End -----
+-> XAMPP was used as a development environment
+-> To start the server, we simply open the XAMPP control panel and start apache and mysql server
+-> The MySQL server starts at the port 3306
+-> To make a database we just click on new database and add different tables to our database
+-> *** MAKING A CONNECTION ***
+---> """
+        import java.sql.*;
+        // Making a connection
+        Connection conn = null;
+        Statement st = null;
+        // This statement can then be used to make actions like inserting, deleting and querying
+        try {
+          Class.forName("com.mysql.jdbc.Driver");
+          conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/Database_Name", "root", "");
+          // the last two fields are just the user name and password for accessing the database
+          // Statement According to query
+
+        }
+        catch(Exception ex){
+          System.err.println(ex);
+          // This is to know if any error has occurred
+        }
+
+     """
+
+-> *** SQL Query Statements ***
+--->   1. Insertion statements
+        '''
+        import java.sql.*;
+        String query = "insert into table_name (field1, field2,field3) values(''"+entry1+"','"+ entry2+"','"+ entry3+"'')";
+        Connection conn = null;
+        Statement st = null;
+        try {
+          Class.forName("com.mysql.jdbc.Driver");
+          conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/Database_Name", "root", "");
+          // the last two fields are just the user name and password for accessing the database
+          // Statement According to query
+          st = conn.createStatement();
+          st.executeUpdate(query);
+        }
+        catch(Exception ex){
+          System.err.println(ex);
+          // This is to know if any error has occurred
+        }
+        '''
+
+        2. Selection statements (to get data from the database)
+        '''
+        import java.sql.*;
+
+        Connection conn = null;
+        Statement st = null;
+
+        String s1 = "";
+        String s2 = "";
+        String s3 = "";
+
+        String query = "select field1, field2, field3 from table_name where (#some condition. Eg. field4 = 'some value')";
+        try {
+          Class.forName("com.mysql.jdbc.Driver");
+
+          conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/Database_Name", "root", "");
+          // the last two fields are just the user name and password for accessing the database
+          // Statement According to query
+
+          st = conn.createStatement();
+          ResultSet rs = st.executeQuery(query);
+          //this result set will now contain the field1,field2,field3 for every row in table
+          //this means we will have to loop through it in order to access the fields
+          while(rs.next()){
+            s1 = rs.getString(1); //this gets the field 1 for row's 1st column
+            s2 = rs.getString(2); //this gets the field 2 for row's 2nd column
+            s3 = rs.getString(3); //this gets the field 3 for row's 3rd column
+            // here we have just assumed that the condition gives us only one column. Otherwise we create an arraylist to store
+          }
+
+        }
+        catch(Exception ex){
+          System.err.println(ex);
+          // This is to know if any error has occurred
+        }
+        '''
+
+        3. Deletion Statements
+        '''
+        import java.sql.*;
+
+        Connection conn = null;
+        PreparedStatement st = null;
+
+        String query = "delete from table_name where ##condition";
+        // if we don't specify anything after delete and directly start from 'from' then the whole row meeting the condition will be deleted
+        try {
+          Class.forName("com.mysql.jdbc.Driver");
+          conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/Database_Name", "root", "");
+          // the last two fields are just the user name and password for accessing the database
+          // Statement According to query
+          st = conn.prepareStatement(query);
+          String delete = st.execute();
+        }
+        catch(Exception ex){
+          System.err.println(ex);
+          // This is to know if any error has occurred
+        }
+        '''
+
+
+-> The Flow of data in our program
+---> To link pages: create an object of that jFrame object and then set its Visible attribute to true and at the same time set the Visible attribute of the current page to false
+Eg. '''
+      Manager manage = new Manager();
+      manage.setVisible(true);
+      this.setVisible(true);
+    '''
+---> To send the data from one page to another page we just have to pass them as arguments to the instance of the next page created in the above statement
+Eg. '''
+      Manager manage = new Manager(name, email, number);
+      manage.setVisible(true);
+      this.setVisible(false);
+
+      (inside the constructor of Manager)
+      String name;
+      String email;
+      String number;
+      public Manager(String name, String email, String number){
+        this.name = name;
+        this.email = email;
+        this.number = number;
+        initComponents();
+      }
+    '''
